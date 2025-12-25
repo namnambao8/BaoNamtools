@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAONAM TOOL</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: #475569;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary), #1a1f2e);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .app-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Card styling */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            font-size: 1.6rem;
+        }
+
+        /* Input groups */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .file-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #2d3748;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            margin: 30px 0;
+            display: none;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        /* Status messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Results section */
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-info {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .results-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--bg-secondary);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .app-title {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .file-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .results-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">bAOnAM tool</h1>
+            <p class="app-subtitle">Công cụ lọc và tìm kiếm từ khóa trong file text</p>
+        </header>
+
+        <!-- File Selection Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-file-alt"></i>
+                1. Chọn file đầu vào (.txt)
+            </h2>
+            <div class="input-group">
+                <div class="file-input-wrapper">
+                    <input type="text" id="filePath" placeholder="Chưa chọn file..." readonly>
+                    <button class="btn btn-secondary" id="browseBtn">
+                        <i class="fas fa-folder-open"></i> Duyệt...
+                    </button>
+                </div>
+                <small style="color: var(--text-secondary); margin-top: 8px; display: block;">
+                    Chỉ hỗ trợ file .txt với encoding UTF-8
+                </small>
+            </div>
+        </div>
+
+        <!-- Keyword Input Card -->
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-search"></i>
+                2. Nhập từ khóa cần tìm
+            </h2>
+            <div class="input-group">
+                <input type="text" id="keyword" 
+                       placeholder="Nhập từ khóa (không phân biệt hoa thường)...">
+                <small style="color: var(--text-secondary); margin-top: 8px; display: block;">
+                    Tìm kiếm không phân biệt chữ hoa/thường
+                </small>
+            </div>
+        </div>
+
+        <!-- Find Button -->
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn btn-primary" id="findBtn">
+                <i class="fas fa-search"></i> FIND
+            </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-info">
+                <span id="progressText">Đang xử lý...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Loading Animation -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Đang xử lý file, vui lòng chờ...</p>
+        </div>
+
+        <!-- Status Messages -->
+        <div class="status-message" id="successMessage">
+            <i class="fas fa-check-circle status-icon"></i>
+            <div>
+                <strong>Thành công!</strong>
+                <p id="successText">Đã tạo file output.txt thành công.</p>
+            </div>
+        </div>
+
+        <div class="status-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle status-icon"></i>
+            <div>
+                <strong>Có lỗi xảy ra!</strong>
+                <p id="errorText">Vui lòng kiểm tra lại thông tin.</p>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results" id="resultsSection">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-check-circle"></i>
+                    Kết quả
+                </h2>
+                
+                <div class="results-info">
+                    <p>Quá trình tìm kiếm đã hoàn tất. File kết quả đã được tạo.</p>
+                    
+                    <div class="results-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="totalLines">0</div>
+                            <div class="stat-label">Dòng đã xử lý</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="matchedLines">0</div>
+                            <div class="stat-label">Dòng khớp</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="fileSize">0 KB</div>
+                            <div class="stat-label">Kích thước</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-secondary" id="openFolderBtn">
+                        <i class="fas fa-folder-open"></i> Mở thư mục
+                    </button>
+                    <button class="btn btn-primary" id="downloadBtn">
+                        <i class="fas fa-download"></i> Tải file output.txt
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>BaoNam tool &copy; 2025 - Công cụ xử lý văn bản chuyên nghiệp</p>
+            <p>Phiên bản: 1.0.0 | Hỗ trợ Unicode UTF-8</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const filePathInput = document.getElementById('filePath');
+        const browseBtn = document.getElementById('browseBtn');
+        const keywordInput = document.getElementById('keyword');
+        const findBtn = document.getElementById('findBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressText = document.getElementById('progressText');
+        const loading = document.getElementById('loading');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const successText = document.getElementById('successText');
+        const errorText = document.getElementById('errorText');
+        const resultsSection = document.getElementById('resultsSection');
+        const totalLinesSpan = document.getElementById('totalLines');
+        const matchedLinesSpan = document.getElementById('matchedLines');
+        const fileSizeSpan = document.getElementById('fileSize');
+        const openFolderBtn = document.getElementById('openFolderBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // File handling variables
+        let selectedFile = null;
+        let outputContent = '';
+
+        // Browse button click handler
+        browseBtn.addEventListener('click', () => {
+            // Tạo input file ẩn
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.txt,text/plain';
+            
+            fileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Kiểm tra định dạng file
+                    if (!file.name.toLowerCase().endsWith('.txt')) {
+                        showError('Vui lòng chọn file .txt');
+                        return;
+                    }
+                    
+                    selectedFile = file;
+                    filePathInput.value = file.name;
+                    
+                    // Reset UI
+                    resetUI();
+                }
+            };
+            
+            fileInput.click();
+        });
+
+        // Find button click handler
+        findBtn.addEventListener('click', async () => {
+            // Validate inputs
+            if (!selectedFile) {
+                showError('Vui lòng chọn file đầu vào!');
+                return;
+            }
+            
+            const keyword = keywordInput.value.trim();
+            if (!keyword) {
+                showError('Vui lòng nhập từ khóa tìm kiếm!');
+                return;
+            }
+            
+            // Reset UI and show progress
+            resetUI();
+            showProgress(true);
+            findBtn.disabled = true;
+            
+            try {
+                // Đọc file
+                const text = await selectedFile.text();
+                const lines = text.split('\n');
+                const totalLines = lines.length;
+                
+                // Cập nhật số dòng
+                totalLinesSpan.textContent = totalLines.toLocaleString();
+                
+                // Tìm kiếm từng dòng
+                let matchedCount = 0;
+                outputContent = '';
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Kiểm tra từ khóa (không phân biệt hoa thường)
+                    if (line.toLowerCase().includes(keyword.toLowerCase())) {
+                        outputContent += line + '\n';
+                        matchedCount++;
+                    }
+                    
+                    // Cập nhật tiến trình mỗi 100 dòng
+                    if (i % 100 === 0 || i === lines.length - 1) {
+                        const percent = Math.round((i + 1) / lines.length * 100);
+                        updateProgress(percent, `Đang xử lý dòng ${i + 1}/${lines.length}`);
+                        
+                        // Tạm dừng để không block UI
+                        await sleep(0);
+                    }
+                }
+                
+                // Cập nhật kết quả
+                matchedLinesSpan.textContent = matchedCount.toLocaleString();
+                
+                // Tính kích thước file
+                const fileSize = new Blob([outputContent]).size;
+                const fileSizeKB = (fileSize / 1024).toFixed(2);
+                fileSizeSpan.textContent = `${fileSizeKB} KB`;
+                
+                // Tạo file output
+                const outputBlob = new Blob([outputContent], { type: 'text/plain;charset=utf-8' });
+                const outputUrl = URL.createObjectURL(outputBlob);
+                
+                // Thiết lập nút tải về
+                downloadBtn.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = outputUrl;
+                    a.download = 'output.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+                
+                // Hoàn tất
+                showProgress(false);
+                showSuccess(`Tìm thấy ${matchedCount} dòng chứa từ khóa "${keyword}"`);
+                resultsSection.style.display = 'block';
+                
+                // Tự động cuộn đến kết quả
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Không thể đọc file. Vui lòng kiểm tra encoding (UTF-8)');
+            } finally {
+                findBtn.disabled = false;
+            }
+        });
+
+        // Open folder button handler
+        openFolderBtn.addEventListener('click', () => {
+            // Trong trình duyệt web, không thể mở thư mục trực tiếp
+            // Chúng ta sẽ tạo và tải file output.txt
+            const blob = new Blob([outputContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'output.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Giải phóng URL
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+        });
+
+        // Helper functions
+        function showProgress(show) {
+            if (show) {
+                progressContainer.style.display = 'block';
+                loading.style.display = 'block';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+            } else {
+                loading.style.display = 'none';
+            }
+        }
+
+        function updateProgress(percent, text) {
+            progressFill.style.width = `${percent}%`;
+            progressPercent.textContent = `${percent}%`;
+            if (text) progressText.textContent = text;
+        }
+
+        function showSuccess(message) {
+            successText.textContent = message;
+            successMessage.style.display = 'flex';
+            errorMessage.style.display = 'none';
+            
+            // Tự động ẩn sau 5 giây
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.style.display = 'flex';
+            successMessage.style.display = 'none';
+            findBtn.disabled = false;
+            
+            // Tự động ẩn sau 5 giây
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function resetUI() {
+            progressContainer.style.display = 'none';
+            progressFill.style.width = '0%';
+            progressPercent.textContent = '0%';
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            resultsSection.style.display = 'none';
+            loading.style.display = 'none';
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Thêm hiệu ứng cho input khi focus
+        keywordInput.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+
+        keywordInput.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+
+        // Cho phép nhấn Enter để tìm kiếm
+        keywordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                findBtn.click();
+            }
+        });
+
+        // Khởi tạo
+        resetUI();
+        
+        console.log('BAONAM TOOL đã sẵn sàng!');
+    </script>
+</body>
+</html>
